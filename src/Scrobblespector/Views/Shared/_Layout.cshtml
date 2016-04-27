@@ -16,7 +16,7 @@
             <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
         </environment>
     </head>
-    <body>
+    <body ng-app="scrobblespectorApp">
         <div class="navbar navbar-inverse navbar-fixed-top">
             <div class="container">
                 <div class="navbar-header">
@@ -30,6 +30,7 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
+                        <li><a asp-controller="Home" asp-action="InspectorHome">Inspector Home</a></li>
                         <li><a asp-controller="Home" asp-action="Index">Home</a></li>
                         <li><a asp-controller="Home" asp-action="About">About</a></li>
                         <li><a asp-controller="Home" asp-action="Contact">Contact</a></li>
@@ -49,6 +50,9 @@
         <environment names="Development">
             <script src="~/lib/jquery/dist/jquery.js"></script>
             <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+            <script src="~/lib/angular/angular.js"></script>
+            <script src="~/lib/angular-resource/angular-resource.min.js"></script>
+            <script src="~/lib/angular-route/angular-route.min.js"></script>
             <script src="~/js/site.js" asp-append-version="true"></script>
         </environment>
         <environment names="Staging,Production">
@@ -60,8 +64,14 @@
                     asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
                     asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
             </script>
+            <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.min.js"
+                    asp-fallback-src="~/lib/angular/angular.min.js"
+                    asp-fallback-test="window.angular">
+            </script>
             <script src="~/js/site.min.js" asp-append-version="true"></script>
         </environment>
+
+        <script src="~/app/scripts/app.js"></script>
 
         @RenderSection("scripts", required: false)
     </body>
