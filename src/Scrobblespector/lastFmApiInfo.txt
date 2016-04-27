@@ -1,0 +1,8 @@
+﻿Application name	Scrobblespector
+API key				b46bf61085abeaaad64c2e795c90e976
+Shared secret		87f2a669ff69a80a1f3e2fa3f6619af1
+Registered to		SR(d)JAN
+
+Example usage:
+
+http://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=SR(d)JAN&api_key=b46bf61085abeaaad64c2e795c90e976
