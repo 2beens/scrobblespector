@@ -31,10 +31,5 @@ namespace Scrobblespector.Controllers
         {
             return View();
         }
-
-        public IActionResult InspectorHome()
-        {
-            return View();
-        }
     }
 }

@@ -1,0 +1,28 @@
+﻿<div>
+    <div class="jumbotron">
+        <h1>Artists Inspector</h1>
+        <p>Use this page for artists lookup and inspection!</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3"><span class="glyphicon glyphicon-cd" aria-hidden="true"></span></div>        
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-addon" id="sizing-addon1">@</span>
+                        <input type="text" class="form-control" ng-model="vm.artistName" placeholder="Artist name..." aria-describedby="sizing-addon1">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <a class="btn btn-primary btn-lg" ng-disabled="vm.artistName.length === 0" ng-click="vm.getArtist(vm.artistName)" role="button">Try Get</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+
+    <div class="row artists-results">
+        
+    </div>
+</div>

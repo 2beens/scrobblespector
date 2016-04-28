@@ -1,32 +1,30 @@
-﻿'use strict';
-
-/**
- * @ngdoc overview
- * @name scrobblespectorApp
- * @description
- * # scrobblespectorApp
- *
- * Main module of the application.
- */
-angular
-  .module('scrobblespectorApp', [
-    'ngResource',
-    'ngRoute'
-  ])
-  .config(function ($routeProvider) {
-      $routeProvider
-        .when('/', {
-            templateUrl: 'app/views/index.html',
-            controller: 'TestController',
-            controllerAs: 'vm'
-        })        
-        .otherwise({
-            redirectTo: '/'
-        });
-  });
-
-
-//var scrobblespectorApp = angular.module('scrobblespectorApp', [])
-//    .controller('testController', ['$scope', function ($scope) {
-//        $scope.name = 'ST';
-//    }]);
+﻿angular
+    .module('scrobblespectorApp', [
+        'ngResource',
+        'ngRoute'
+    ])
+    .config(function ($routeProvider) {
+        $routeProvider
+            .when('/', {
+                templateUrl: '/app/views/index.html',
+                controller: 'TestController',
+                controllerAs: 'vm'
+            })
+            .when('/users', {
+                templateUrl: '/app/views/users.html',
+                controller: 'TestController',
+                controllerAs: 'vm'
+            })
+            .when('/artists', {
+                templateUrl: '/app/views/artists.html',
+                controller: 'ArtistsController',
+                controllerAs: 'vm'
+            })
+            .otherwise({
+                redirectTo: '/'
+            });
+    })
+    .run(function () {
+        console.log('App run() started.');
+    });
+   
