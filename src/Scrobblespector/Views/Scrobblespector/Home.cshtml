@@ -10,6 +10,7 @@
 
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/scrobblespector-general.css" />
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment names="Staging,Production">
@@ -17,6 +18,7 @@
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/scrobblespector-general.css" asp-append-version="true" />
     </environment>
 </head>
 <body ng-app="scrobblespectorApp">
@@ -76,10 +78,14 @@
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
 
+    @* --------------------- GENERAL -------------------------------------------------*@
     <script src="~/app/scripts/app.js"></script>
+    <script src="~/app/scripts/global.js"></script>
+
     @* --------------------- CONTROLLERS ---------------------------------------------*@
     <script src="~/app/scripts/controllers/testController.js"></script>
     <script src="~/app/scripts/controllers/artistsController.js"></script>
+    <script src="~/app/scripts/services/artistsService.js"></script>
 
     @*@RenderSection("scripts", required: false)*@
 </body>

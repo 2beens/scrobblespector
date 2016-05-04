@@ -1,0 +1,22 @@
+﻿.artists-search-input {
+    background-color: azure;
+    padding-bottom: 7px;
+    padding-top: 7px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.artists-results {
+    background-color: dodgerblue;
+    font-family: sans-serif;
+    font-size: 1.2em;
+    color: white;
+
+    margin: 25px;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.artists-results-empty {
+    margin-top: 200px;
+}

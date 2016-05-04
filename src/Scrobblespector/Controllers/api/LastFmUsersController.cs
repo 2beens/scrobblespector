@@ -9,13 +9,9 @@ using System.Threading.Tasks;
 
 namespace Scrobblespector.Controllers.api
 {
-    [Route("api/lastfm")]
-    public class LastFmController : Controller
+    [Route("api/lastfm/users")]
+    public class LastFmUsersController : Controller
     {
-        private const string LAST_FM_API_KEY = "b46bf61085abeaaad64c2e795c90e976";
-        private const string SCROBBLER_BASE_ADDR = "http://ws.audioscrobbler.com/2.0/";
-        private const string SCROBBLER_GET_USER_ADDR = "?method=user.getinfo&user={0}&api_key={1}&format=json";
-
         [HttpGet("{id}", Name = "GetUser")]
         public IActionResult GetUser(string id)
         {
@@ -24,7 +20,7 @@ namespace Scrobblespector.Controllers.api
             
             using (var client = new HttpClient(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate }))
             {
-                client.BaseAddress = new Uri(SCROBBLER_BASE_ADDR);
+                client.BaseAddress = new Uri(SharedConfigs.SCROBBLER_BASE_ADDR);
                 HttpResponseMessage response = client.GetAsync(GetUserRequestPath(id)).Result;
                 response.EnsureSuccessStatusCode();
 
@@ -44,7 +40,7 @@ namespace Scrobblespector.Controllers.api
             if(string.IsNullOrEmpty(userId))
                 throw new ArgumentNullException("userId");
 
-            return string.Format(SCROBBLER_GET_USER_ADDR, userId, LAST_FM_API_KEY);
+            return string.Format(SharedConfigs.SCROBBLER_GET_USER_PATH, userId);
         }
     }
 }

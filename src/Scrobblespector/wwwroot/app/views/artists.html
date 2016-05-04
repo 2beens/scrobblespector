@@ -4,25 +4,55 @@
         <p>Use this page for artists lookup and inspection!</p>
     </div>
 
-    <div class="row">
-        <div class="col-md-3"><span class="glyphicon glyphicon-cd" aria-hidden="true"></span></div>        
+    <div class="row artists-search-input">
+        <div class="col-md-3"><span class="glyphicon glyphicon-cd" aria-hidden="true"></span></div>
         <div class="col-md-6">
             <div class="row">
                 <div class="col-md-8">
                     <div class="input-group input-group-lg">
                         <span class="input-group-addon" id="sizing-addon1">@</span>
-                        <input type="text" class="form-control" ng-model="vm.artistName" placeholder="Artist name..." aria-describedby="sizing-addon1">
+                        <input type="text" class="form-control" ng-model="vm.artistName" ng-keypress="vm.searchArtist($event)" placeholder="Artist name..." aria-describedby="sizing-addon1">
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <a class="btn btn-primary btn-lg" ng-disabled="vm.artistName.length === 0" ng-click="vm.getArtist(vm.artistName)" role="button">Try Get</a>
+                    <a ng-if="!vm.searchInProgress" class="btn btn-primary btn-lg" ng-disabled="vm.artistName.length === 0" ng-click="vm.searchArtist(null)" role="button">Search!</a>
+                    <a ng-if="vm.searchInProgress" ng-disabled="true" class="btn btn-primary btn-lg" role="button">Searching...</a>
                 </div>
             </div>
         </div>
         <div class="col-md-3"></div>
     </div>
 
-    <div class="row artists-results">
-        
+    <div ng-show="vm.foundArtists.length > 0" class="row artists-results">
+        <div class="row">
+            <div class="col-md-5">
+                <h3>Found {{ vm.foundArtists.length }} artists!</h3>
+            </div>
+            <div class="col-md-7">
+                <h3>Details</h3>
+            </div>
+        </div>
+
+        <div class="row"><hr /></div>
+
+        <div class="col-md-5">
+            <div class="list-group">
+                <div ng-repeat="artist in vm.foundArtists">
+                    <a ng-if="$index === 3" href="#" class="list-group-item active">
+                        <h4 class="list-group-item-heading">{{ artist.name }}</h4>
+                        <p class="list-group-item-text">Number of listeners: {{ artist.listeners }}</p>
+                    </a>
+                    <a ng-if="$index !== 3" href="#" class="list-group-item">
+                        <h4 class="list-group-item-heading">{{ artist.name }}</h4>
+                        <p class="list-group-item-text">Number of listeners: {{ artist.listeners }}</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7">
+            <h2>Korn &clubs; Slipknot</h2>
+        </div>
     </div>
+
+    <div ng-show="vm.foundArtists.length === 0" class="row artists-results-empty"></div>
 </div>
