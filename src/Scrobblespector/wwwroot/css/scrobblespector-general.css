@@ -20,3 +20,12 @@
 .artists-results-empty {
     margin-top: 200px;
 }
+
+.artist-row {
+    margin-bottom: 5px;
+}
+
+.selected-artist {
+    background-color: black;
+    border-radius: 5px;
+}

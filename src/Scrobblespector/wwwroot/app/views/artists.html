@@ -37,20 +37,23 @@
 
         <div class="col-md-5">
             <div class="list-group">
-                <div ng-repeat="artist in vm.foundArtists">
-                    <a ng-if="$index === 3" href="#" class="list-group-item active">
-                        <h4 class="list-group-item-heading">{{ artist.name }}</h4>
-                        <p class="list-group-item-text">Number of listeners: {{ artist.listeners }}</p>
-                    </a>
-                    <a ng-if="$index !== 3" href="#" class="list-group-item">
+                <div class="artist-row" ng-repeat="artist in vm.foundArtists">
+                    <a href="" ng-click="vm.selectArtist(artist)" ng-class="{ 'active': artist.isSelected }" class="list-group-item">
                         <h4 class="list-group-item-heading">{{ artist.name }}</h4>
                         <p class="list-group-item-text">Number of listeners: {{ artist.listeners }}</p>
                     </a>
                 </div>
             </div>
         </div>
-        <div class="col-md-7">
-            <h2>Korn &clubs; Slipknot</h2>
+
+        <div ng-show="vm.selectedArtist !== null" class="col-md-7 selected-artist">
+            <h2>{{ vm.selectedArtist.name }}</h2>
+            <h3>[{{ vm.selectedArtist.listeners }} listeners]</h3>
+            <div class="row">
+                <div class="col-md-3"><p>Visit Artist Page</p></div>
+                <div class="col-md-3"><a href="{{ vm.selectedArtist.url }}">&uArr;&uArr;&uArr;</a></div>
+            </div>
+            <!--<img src="{{ vm.selectedArtist.image[0].#text }}" />-->
         </div>
     </div>
 

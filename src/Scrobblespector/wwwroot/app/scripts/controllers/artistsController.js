@@ -10,6 +10,7 @@
         vm.searchInProgress = false;
         vm.artistName = '';
         vm.foundArtists = [];
+        vm.selectedArtist = null;
 
         vm.searchArtist = function (keyEvent) {
             if (keyEvent !== null && keyEvent.which !== 13) {
@@ -20,6 +21,7 @@
                 return;
             }
 
+            vm.selectedArtist = null;
             vm.searchInProgress = true;
             artistsService.searchArtist(vm.artistName).then(function (data) {
                 vm.foundArtists = data.artistmatches.artist;
@@ -27,6 +29,18 @@
             }, function (error) {
                 alert('error => ' + error)
                 vm.searchInProgress = false;
+            });
+        }
+
+        vm.selectArtist = function (artist) {
+            vm.diselectAllArtists();
+            vm.selectedArtist = artist;
+            artist.isSelected = true;
+        }
+
+        vm.diselectAllArtists = function () {
+            angular.forEach(vm.foundArtists, function (artist) {
+                artist.isSelected = false;
             });
         }
     }
