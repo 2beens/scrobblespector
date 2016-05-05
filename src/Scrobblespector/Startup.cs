@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Scrobblespector.Models;
 using Scrobblespector.Services;
+using Newtonsoft.Json.Serialization;
 
 namespace Scrobblespector
 {
@@ -47,8 +48,11 @@ namespace Scrobblespector
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-
-            services.AddMvc();
+            
+            services.AddMvc().AddJsonOptions(opt =>
+            {
+                opt.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            });
 
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();

@@ -1,9 +1,9 @@
 ﻿.artists-search-input {
-    background-color: azure;
+    margin: 25px;
     padding-bottom: 7px;
     padding-top: 7px;
     margin-bottom: 10px;
-    border-radius: 5px;
+    border-bottom: solid 1px dodgerblue;
 }
 
 .artists-results {

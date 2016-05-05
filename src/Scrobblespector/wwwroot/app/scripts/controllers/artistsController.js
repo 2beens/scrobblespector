@@ -24,7 +24,7 @@
             vm.selectedArtist = null;
             vm.searchInProgress = true;
             artistsService.searchArtist(vm.artistName).then(function (data) {
-                vm.foundArtists = data.artistmatches.artist;
+                vm.foundArtists = data.value.artistmatches.artist;
                 vm.searchInProgress = false;
             }, function (error) {
                 alert('error => ' + error)
@@ -33,8 +33,19 @@
         }
 
         vm.selectArtist = function (artist) {
+            if (artist.isSelected) {
+                return;
+            }
+
             vm.diselectAllArtists();
             vm.selectedArtist = artist;
+
+            artistsService.getArtist(vm.selectedArtist.mbid).then(function (data) {
+                console.log(data);
+            }, function (error) {
+                alert('error => ' + error)
+            });
+
             artist.isSelected = true;
         }
 
