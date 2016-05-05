@@ -1,0 +1,191 @@
+﻿using Microsoft.AspNet.Mvc;
+using Newtonsoft.Json.Linq;
+using Scrobblespector.Models;
+using Scrobblespector.Models.Artists;
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+
+namespace Scrobblespector.Services
+{
+    public class LastFmArtistsService : ILastFmArtistsService
+    {
+        public SearchArtistsResult SearchArtists(string queryString)
+        {
+            using (var client = new HttpClient(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate }))
+            {
+                client.BaseAddress = new Uri(SharedConfigs.SCROBBLER_BASE_ADDR);
+                HttpResponseMessage response = client.GetAsync(GetSearchArtistRequestPath(queryString)).Result;
+                response.EnsureSuccessStatusCode();
+
+                //if (response.StatusCode != HttpStatusCode.OK)
+                //    return Json(new { errorMessage = "Wrong data received from LastFM server." });
+
+                // TODO: throw adequate exception
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return new SearchArtistsResult { TotalCount = 0, FoundArtists = new List<ArtistInfo>() };
+
+                string artistsJsonString = response.Content.ReadAsStringAsync().Result;
+                dynamic artistsJson = JObject.Parse(artistsJsonString);
+
+                List<ArtistInfo> foundArtists = new List<ArtistInfo>();
+                foreach(dynamic artist in artistsJson.results.artistmatches.artist)
+                {
+                    string name = artist.name;
+                    string listenersCountStr = artist.listeners;
+                    string mbid = artist.mbid;
+                    int listenersCount;
+                    if (!Int32.TryParse(listenersCountStr, out listenersCount))
+                        listenersCount = -1;
+
+                    foundArtists.Add(new ArtistInfo
+                    {
+                        MBID = artist.mbid,
+                        ListenersCount = listenersCount,
+                        Name = name,
+                        Images = new List<LastFmImage>()
+                    });
+                }
+
+                JObject artistsJsonResults = artistsJson.results as JObject;
+                string totalArtistsCountStr = artistsJsonResults.GetValue("opensearch:totalResults").Value<string>();
+
+                return new SearchArtistsResult { FoundArtists = foundArtists, TotalCount = Int32.Parse(totalArtistsCountStr) };
+            }
+        }
+
+        public Artist GetArtist(string mbid)
+        {
+            using (var client = new HttpClient(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate }))
+            {
+                client.BaseAddress = new Uri(SharedConfigs.SCROBBLER_BASE_ADDR);
+                HttpResponseMessage response = client.GetAsync(GetArtistRequestPath(mbid)).Result;
+                response.EnsureSuccessStatusCode();
+
+                //if (response.StatusCode != HttpStatusCode.OK)
+                //    return Json(new { errorMessage = "Wrong data received from LastFM server." });
+
+                // TODO: throw adequate exception
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return null;
+
+                string artistJsonString = response.Content.ReadAsStringAsync().Result;
+                dynamic artistJson = JObject.Parse(artistJsonString);
+
+                try
+                {
+                    return GetArtistByDynamicJson(artistJson.artist);
+                }
+                catch (Exception ex)
+                {
+                    Console.Write(ex.GetType());
+                }
+
+                return null;
+            }
+        }
+
+        [NonAction]
+        private Artist GetArtistByDynamicJson(dynamic artistJson)
+        {
+            List<LastFmImage> images = new List<LastFmImage>();
+            foreach (JObject image in artistJson.image)
+            {
+                string imageSize = image.GetValue("size").Value<string>();
+                string imageUrl = image.GetValue("#text").Value<string>();
+                images.Add(new LastFmImage(imageSize, imageUrl));
+            }
+
+            List<ArtistInfo> similarArtists = new List<ArtistInfo>();
+            foreach (dynamic similarArtist in artistJson.similar.artist)
+            {
+                string saName = similarArtist.name;
+                string saUrl = similarArtist.url;
+                List<LastFmImage> saImages = new List<LastFmImage>();
+                foreach (JObject image in similarArtist.image)
+                {
+                    string imageSize = image.GetValue("size").Value<string>();
+                    string imageUrl = image.GetValue("#text").Value<string>();
+                    saImages.Add(new LastFmImage(imageSize, imageUrl));
+                }
+
+                similarArtists.Add(new ArtistInfo
+                {
+                    Name = saName,
+                    URL = saUrl,
+                    Images = saImages
+                });
+            }
+
+            string linkHref = artistJson.bio.links.link.href;
+            List<string> links = new List<string>() { linkHref };
+
+            List<ArtistTag> tags = new List<ArtistTag>();
+            foreach (dynamic tag in artistJson.tags.tag)
+            {
+                tags.Add(new ArtistTag
+                {
+                    Name = tag.name,
+                    Url = tag.url
+                });
+            }
+
+            DateTime? published;
+            DateTime publishedDate;
+            string datePublishedStr = artistJson.bio.published;
+            if (!DateTime.TryParse(datePublishedStr, out publishedDate))
+                published = null;
+            else
+                published = publishedDate;
+
+            string content = artistJson.bio.content;
+            bool isStreamable = artistJson.streamable == "1";
+
+            string listenersCountStr = artistJson.stats.listeners;
+            int listenersCount;
+            if (!Int32.TryParse(listenersCountStr, out listenersCount))
+                listenersCount = 0;
+
+            string playsCountStr = artistJson.stats.playcount;
+            int playsCount;
+            if (!Int32.TryParse(playsCountStr, out playsCount))
+                playsCount = 0;
+
+            return new Artist
+            {
+                Content = content,
+                Images = images,
+                IsStreamable = isStreamable,
+                Tags = tags,
+                Links = links,
+                Name = artistJson.name,
+                MBID = artistJson.mbid,
+                ListenersCount = listenersCount,
+                PlaysCount = playsCount,
+                Published = published,
+                Summary = artistJson.bio.summary,
+                URL = artistJson.url,
+                SimilarArtists = similarArtists
+            };
+        }
+
+        [NonAction]
+        private string GetSearchArtistRequestPath(string artistName)
+        {
+            if (string.IsNullOrEmpty(artistName))
+                throw new ArgumentNullException("artistName");
+
+            return string.Format(SharedConfigs.SCROBBLER_SEARCH_ARTIST_PATH, artistName);
+        }
+
+        [NonAction]
+        private string GetArtistRequestPath(string mbid)
+        {
+            if (string.IsNullOrEmpty(mbid))
+                throw new ArgumentNullException("mbid");
+
+            return string.Format(SharedConfigs.SCROBBLER_GET_ARTIST_PATH, mbid);
+        }
+    }
+}

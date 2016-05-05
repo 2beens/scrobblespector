@@ -11,9 +11,11 @@
         .provider('utilizr', ['app', function (app) {
             var utilizr = (function () {
                 var utilizr = {
-                    getApiFullUrl: getApiFullUrl,
+                    getApiFullUrl:     getApiFullUrl,
                     getArtistsApiPath: getArtistsApiPath,
-                    getUsersApiPath: getUsersApiPath
+                    getUsersApiPath:   getUsersApiPath,
+                    isNullOrUndef:     isNullOrUndef,
+                    isNotNullAndUndef: isNotNullAndUndef
                 };
 
                 return utilizr;
@@ -28,6 +30,14 @@
 
                 function getUsersApiPath() {
                     return app.config.ssApiPath + '/users';
+                }
+
+                function isNullOrUndef(object) {
+                    return (object === null || object === undefined);
+                }
+
+                function isNotNullAndUndef(object) {
+                    return (object !== null && object !== undefined);
                 }
             })();
 

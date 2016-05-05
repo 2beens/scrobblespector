@@ -26,7 +26,7 @@
     <div ng-show="vm.foundArtists.length > 0" class="row artists-results">
         <div class="row">
             <div class="col-md-5">
-                <h3>Found {{ vm.foundArtists.length }} artists!</h3>
+                <h3>Found {{ vm.totalArtistsFound }} artists!</h3>
             </div>
             <div class="col-md-7">
                 <h3>Details</h3>
@@ -40,20 +40,72 @@
                 <div class="artist-row" ng-repeat="artist in vm.foundArtists">
                     <a href="" ng-click="vm.selectArtist(artist)" ng-class="{ 'active': artist.isSelected }" class="list-group-item">
                         <h4 class="list-group-item-heading">{{ artist.name }}</h4>
-                        <p class="list-group-item-text">Number of listeners: {{ artist.listeners }}</p>
+                        <p class="list-group-item-text">Number of listeners: {{ artist.listenersCount }}</p>
                     </a>
                 </div>
             </div>
         </div>
 
-        <div ng-show="vm.selectedArtist !== null" class="col-md-7 selected-artist">
-            <h2>{{ vm.selectedArtist.name }}</h2>
-            <h3>[{{ vm.selectedArtist.listeners }} listeners]</h3>
+        <div ng-show="vm.selectedArtistInfo !== null" class="col-md-7 selected-artist">
             <div class="row">
-                <div class="col-md-3"><p>Visit Artist Page</p></div>
-                <div class="col-md-3"><a href="{{ vm.selectedArtist.url }}">&uArr;&uArr;&uArr;</a></div>
+                <div class="col-md-6"><h2>{{ vm.selectedArtist.name }}</h2></div>
+                <div class="col-md-6">
+                    <div class="selected-artist-playcount"><p>{{ vm.selectedArtistInfo.playsCount }} plays</p></div>
+                </div>
             </div>
-            <!--<img src="{{ vm.selectedArtist.image[0].#text }}" />-->
+
+            <!-- ------------------------------------ IMAGE & SUMMARY --------------------------- -->
+            <!-- -------------------------------------------------------------------------------- -->
+            <div class="row" style="padding: 5px;">
+                <div class="col-xs-6 col-md-3" style="padding-top: 5px;">
+                    <a href="{{ vm.selectedArtist.url }}" style="margin-bottom: 0px;" class="thumbnail">
+                        <img src="{{ vm.selectedArtistDefaultImageUrl }}" alt="Artist default image">
+                    </a>
+                </div>
+                <div style="text-align: justify;"><p>{{ vm.selectedArtistInfo.summary }}</p></div>
+            </div>
+
+            <!-- ------------------------------------ TAGS -------------------------------------- -->
+            <!-- -------------------------------------------------------------------------------- -->
+            <h4>Tags:</h4>
+            
+            <!-- ------------------------------------ TABBED INFO ------------------------------- -->
+            <!-- -------------------------------------------------------------------------------- -->
+            <ul class="nav nav-tabs">
+                <li role="presentation" ng-click="vm.activeTab = 1" ng-class="{ 'active': vm.activeTab === 1 }"><a href="">Bio</a></li>
+                <li role="presentation" ng-click="vm.activeTab = 2" ng-class="{ 'active': vm.activeTab === 2 }"><a href="">Images</a></li>
+                <li role="presentation" ng-click="vm.activeTab = 3" ng-class="{ 'active': vm.activeTab === 3 }"><a href="">Similar Artists</a></li>
+                <li role="presentation" ng-click="vm.activeTab = 4" ng-class="{ 'active': vm.activeTab === 4 }"><a href="">Top Tracks</a></li>
+            </ul>
+            <div class="row artist-info-details">
+                <!-- ------------------------------------ BIO --------------------------------------- -->
+                <div ng-show="vm.activeTab === 1" class="artist-info-details-bio" style="padding: 5px">
+                    <p>Published: {{ vm.selectedArtistInfo.published }}</p>
+                    <p style="text-align: justify">{{ vm.selectedArtistInfo.content }}</p>
+                </div>
+
+                <!-- ------------------------------------ IMAGES ------------------------------------ -->
+                <div ng-show="vm.activeTab === 2" class="artist-info-details-images" style="padding: 15px;">
+                    <div class="row">
+                        <div ng-repeat="image in vm.selectedArtistInfo.images" class="col-xs-6 col-md-3">
+                            <!--<a href="{{ image.url }}" class="thumbnail">
+                                <img src="{{ image.url }}" alt="Artist image">
+                            </a>-->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ------------------------------------ SIMILAR ----------------------------------- -->
+                <div ng-show="vm.activeTab === 3" class="artist-info-details-similar-artist">
+                    <div class="row">
+                    </div>
+                </div>
+                <!-- ------------------------------------ TOP TRACKS -------------------------------- -->
+                <div ng-show="vm.activeTab === 4" class="artist-info-details-similar-artist">
+                    <div class="row">
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

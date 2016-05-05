@@ -1,4 +1,12 @@
-﻿.artists-search-input {
+﻿body {
+    background: url('/app/images/cool_rest-wallpaper-1920x1080.jpg') no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.artists-search-input {
     margin: 25px;
     padding-bottom: 7px;
     padding-top: 7px;
@@ -28,4 +36,12 @@
 .selected-artist {
     background-color: black;
     border-radius: 5px;
+}
+
+.selected-artist-playcount {
+    background-color: dodgerblue;
+    color: white;
+    border-radius: 20px;
+    margin-left: 70px;
+    text-align: center;
 }
