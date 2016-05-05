@@ -74,7 +74,7 @@
             <ul class="nav nav-tabs">
                 <li role="presentation" ng-click="vm.activeTab = 1" ng-class="{ 'active': vm.activeTab === 1 }"><a href="">Bio</a></li>
                 <li role="presentation" ng-click="vm.activeTab = 2" ng-class="{ 'active': vm.activeTab === 2 }"><a href="">Images</a></li>
-                <li role="presentation" ng-click="vm.activeTab = 3" ng-class="{ 'active': vm.activeTab === 3 }"><a href="">Similar Artists</a></li>
+                <li role="presentation" ng-click="vm.activeTab = 3; vm.setSimilarArtists()" ng-class="{ 'active': vm.activeTab === 3 }"><a href="">Similar Artists</a></li>
                 <li role="presentation" ng-click="vm.activeTab = 4" ng-class="{ 'active': vm.activeTab === 4 }"><a href="">Top Tracks</a></li>
             </ul>
             <div class="row artist-info-details">
@@ -97,11 +97,16 @@
 
                 <!-- ------------------------------------ SIMILAR ----------------------------------- -->
                 <div ng-show="vm.activeTab === 3" class="artist-info-details-similar-artist">
-                    <div class="row">
+                    <div class="artist-similar-artists">
+                        <ul>
+                            <li ng-repeat="similarArtist in vm.selectedArtistInfo.similarArtistsList">
+                                <p>{{ similarArtist.match }} - {{ similarArtist.name }}</p>
+                            </li>
+                        </ul>
                     </div>
                 </div>
                 <!-- ------------------------------------ TOP TRACKS -------------------------------- -->
-                <div ng-show="vm.activeTab === 4" class="artist-info-details-similar-artist">
+                <div ng-show="vm.activeTab === 4" class="artist-info-details-top-tracks">
                     <div class="row">
                     </div>
                 </div>

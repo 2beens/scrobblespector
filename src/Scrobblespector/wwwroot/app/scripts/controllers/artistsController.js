@@ -60,11 +60,29 @@
                     }
                 });
             }, function (error) {
-                console.error('error => ' + error)
+                console.error('error [getArtist] => ' + error)
                 vm.selectedArtistInfo = null;
             });
 
             artist.isSelected = true;
+        }
+
+        vm.setSimilarArtists = function () {
+            if (utilizr.isNotNullAndUndef(vm.selectedArtistInfo.similarArtistsList)) {
+                return;
+            }
+
+            artistsService.getSimilarArtists(vm.selectedArtist.mbid).then(function (data) {
+                if (utilizr.isNullOrUndef(data)) {
+                    console.error('Get Similar Artist Error: received null data!');
+                    return;
+                }
+
+                vm.selectedArtistInfo.similarArtistsList = data.value.foundArtists;
+            }, function (error) {
+                console.error('error [getSimilarArtists] => ' + error)
+                vm.selectedArtistInfo.similarArtistsList = null;
+            });
         }
 
         vm.diselectAllArtists = function () {

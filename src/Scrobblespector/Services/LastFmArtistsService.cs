@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNet.Mvc;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using Scrobblespector.Models;
 using Scrobblespector.Models.Artists;
 using System;
@@ -16,7 +15,7 @@ namespace Scrobblespector.Services
             using (var client = new HttpClient(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate }))
             {
                 client.BaseAddress = new Uri(SharedConfigs.SCROBBLER_BASE_ADDR);
-                HttpResponseMessage response = client.GetAsync(GetSearchArtistRequestPath(queryString)).Result;
+                HttpResponseMessage response = client.GetAsync(SharedConfigs.GetSearchArtistRequestPath(queryString)).Result;
                 response.EnsureSuccessStatusCode();
 
                 //if (response.StatusCode != HttpStatusCode.OK)
@@ -32,9 +31,7 @@ namespace Scrobblespector.Services
                 List<ArtistInfo> foundArtists = new List<ArtistInfo>();
                 foreach(dynamic artist in artistsJson.results.artistmatches.artist)
                 {
-                    string name = artist.name;
                     string listenersCountStr = artist.listeners;
-                    string mbid = artist.mbid;
                     int listenersCount;
                     if (!Int32.TryParse(listenersCountStr, out listenersCount))
                         listenersCount = -1;
@@ -42,8 +39,8 @@ namespace Scrobblespector.Services
                     foundArtists.Add(new ArtistInfo
                     {
                         MBID = artist.mbid,
+                        Name = artist.name,
                         ListenersCount = listenersCount,
-                        Name = name,
                         Images = new List<LastFmImage>()
                     });
                 }
@@ -60,7 +57,7 @@ namespace Scrobblespector.Services
             using (var client = new HttpClient(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate }))
             {
                 client.BaseAddress = new Uri(SharedConfigs.SCROBBLER_BASE_ADDR);
-                HttpResponseMessage response = client.GetAsync(GetArtistRequestPath(mbid)).Result;
+                HttpResponseMessage response = client.GetAsync(SharedConfigs.GetArtistRequestPath(mbid)).Result;
                 response.EnsureSuccessStatusCode();
 
                 //if (response.StatusCode != HttpStatusCode.OK)
@@ -86,7 +83,41 @@ namespace Scrobblespector.Services
             }
         }
 
-        [NonAction]
+        public SearchArtistsResult GetSimilarArtists(string mbid)
+        {
+            using (var client = new HttpClient(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate }))
+            {
+                client.BaseAddress = new Uri(SharedConfigs.SCROBBLER_BASE_ADDR);
+                HttpResponseMessage response = client.GetAsync(SharedConfigs.GetSimilarArtistsRequestPath(mbid)).Result;
+                response.EnsureSuccessStatusCode();
+
+                //if (response.StatusCode != HttpStatusCode.OK)
+                //    return Json(new { errorMessage = "Wrong data received from LastFM server." });
+
+                // TODO: throw adequate exception
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return new SearchArtistsResult { TotalCount = 0, FoundArtists = new List<ArtistInfo>() };
+
+                string artistsJsonString = response.Content.ReadAsStringAsync().Result;
+                dynamic artistsJson = JObject.Parse(artistsJsonString);
+
+                List<ArtistInfo> foundArtists = new List<ArtistInfo>();
+                foreach (dynamic artist in artistsJson.similarartists.artist)
+                {
+                    foundArtists.Add(new ArtistInfo
+                    {
+                        MBID = artist.mbid,
+                        Name = artist.name,
+                        Match = artist.match,
+                        URL = artist.url,
+                        Images = new List<LastFmImage>()
+                    });
+                }
+
+                return new SearchArtistsResult { FoundArtists = foundArtists, TotalCount = foundArtists.Count };
+            }            
+        }
+
         private Artist GetArtistByDynamicJson(dynamic artistJson)
         {
             List<LastFmImage> images = new List<LastFmImage>();
@@ -168,24 +199,6 @@ namespace Scrobblespector.Services
                 URL = artistJson.url,
                 SimilarArtists = similarArtists
             };
-        }
-
-        [NonAction]
-        private string GetSearchArtistRequestPath(string artistName)
-        {
-            if (string.IsNullOrEmpty(artistName))
-                throw new ArgumentNullException("artistName");
-
-            return string.Format(SharedConfigs.SCROBBLER_SEARCH_ARTIST_PATH, artistName);
-        }
-
-        [NonAction]
-        private string GetArtistRequestPath(string mbid)
-        {
-            if (string.IsNullOrEmpty(mbid))
-                throw new ArgumentNullException("mbid");
-
-            return string.Format(SharedConfigs.SCROBBLER_GET_ARTIST_PATH, mbid);
         }
     }
 }

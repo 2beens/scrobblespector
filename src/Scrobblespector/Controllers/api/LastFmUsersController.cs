@@ -21,7 +21,7 @@ namespace Scrobblespector.Controllers.api
             using (var client = new HttpClient(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate }))
             {
                 client.BaseAddress = new Uri(SharedConfigs.SCROBBLER_BASE_ADDR);
-                HttpResponseMessage response = client.GetAsync(GetUserRequestPath(id)).Result;
+                HttpResponseMessage response = client.GetAsync(SharedConfigs.GetUserRequestPath(id)).Result;
                 response.EnsureSuccessStatusCode();
 
                 if(response.StatusCode != HttpStatusCode.OK)
@@ -33,14 +33,6 @@ namespace Scrobblespector.Controllers.api
 
                 return Json(userJson.user);
             }
-        }
-
-        private string GetUserRequestPath(string userId)
-        {
-            if(string.IsNullOrEmpty(userId))
-                throw new ArgumentNullException("userId");
-
-            return string.Format(SharedConfigs.SCROBBLER_GET_USER_PATH, userId);
         }
     }
 }
