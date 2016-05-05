@@ -43,6 +43,7 @@
                 return;
             }
 
+            vm.activeTab = 1;
             vm.diselectAllArtists();
             vm.selectedArtist = artist;
 
