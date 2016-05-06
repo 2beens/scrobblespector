@@ -75,7 +75,7 @@
             <!-- -------------------------------------------------------------------------------- -->
             <div class="row artist-tags">
                 <div class="artist-tag" ng-repeat="tag in vm.selectedArtist.topTags">
-                    <div class="row"><p>{{ tag.name }} <span class="badge">{{ tag.count }}</span></p></div>
+                    <div class="row" ng-click="vm.openTagPage(tag.url)"><p>{{ tag.name }} <span class="badge">{{ tag.count }}</span></p></div>
                 </div>
 
                 <!--<a href="{{ tag.url }}">{{ tag.name }} <span class="badge">{{ tag.count }}</span></a>-->

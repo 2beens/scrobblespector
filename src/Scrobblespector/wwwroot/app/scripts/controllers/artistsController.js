@@ -36,7 +36,7 @@
                 console.error('error => ' + error)
                 vm.searchInProgress = false;
             });
-        }
+        };
 
         vm.selectArtist = function (artist) {
             if (artist.isSelected) {
@@ -73,7 +73,7 @@
             });
 
             artist.isSelected = true;
-        }
+        };
 
         vm.setSimilarArtists = function () {
             if (utilizr.isNotNullAndUndef(vm.selectedArtist.similarArtistsList)) {
@@ -91,13 +91,17 @@
                 console.error('error [getSimilarArtists] => ' + error)
                 vm.selectedArtist.similarArtistsList = null;
             });
-        }
+        };
 
         vm.diselectAllArtists = function () {
             angular.forEach(vm.foundArtists, function (artist) {
                 artist.isSelected = false;
             });
-        }
+        };
+
+        vm.openTagPage = function (tagUrl) {
+            window.open(tagUrl, '_blank');
+        };
 
         function getArtistTopTags(mbid, callback) {
             artistsService.getArtistTopTags(mbid).then(function (data) {
