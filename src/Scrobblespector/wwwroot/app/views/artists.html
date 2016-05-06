@@ -33,14 +33,14 @@
             </div>
         </div>
 
-        <div class="row"><hr /></div>
+        <div class="row" style="margin-left: 10px; margin-right: 10px;"><hr /></div>
 
         <div class="col-md-5">
             <div class="list-group">
                 <div class="artist-row" ng-repeat="artist in vm.foundArtists">
                     <a href="" ng-click="vm.selectArtist(artist)" ng-class="{ 'active': artist.isSelected }" class="list-group-item">
                         <h4 class="list-group-item-heading">{{ artist.name }}</h4>
-                        <p class="list-group-item-text">Number of listeners: {{ artist.listenersCount }}</p>
+                        <p class="list-group-item-text"><span id="listeners-count">{{ artist.listenersCount }}</span> listeners</p>
                     </a>
                 </div>
             </div>
@@ -65,9 +65,21 @@
                 <div style="text-align: justify;"><p>{{ vm.selectedArtistInfo.summary }}</p></div>
             </div>
 
+            <!-- ------------------------------------ MBID -------------------------------------- -->
+            <!-- -------------------------------------------------------------------------------- -->
+            <!--<div>
+                <h3>MBID: {{ vm.selectedArtistInfo.mbid }}</h3>
+            </div>-->
+
             <!-- ------------------------------------ TAGS -------------------------------------- -->
             <!-- -------------------------------------------------------------------------------- -->
-            <h4>Tags:</h4>
+            <div class="row artist-tags">
+                <div class="artist-tag" ng-repeat="tag in vm.selectedArtist.topTags">
+                    <div class="row"><p>{{ tag.name }} <span class="badge">{{ tag.count }}</span></p></div>
+                </div>
+
+                <!--<a href="{{ tag.url }}">{{ tag.name }} <span class="badge">{{ tag.count }}</span></a>-->
+            </div>
             
             <!-- ------------------------------------ TABBED INFO ------------------------------- -->
             <!-- -------------------------------------------------------------------------------- -->
@@ -99,7 +111,7 @@
                 <div ng-show="vm.activeTab === 3" class="artist-info-details-similar-artist">
                     <div class="artist-similar-artists">
                         <ul>
-                            <li ng-repeat="similarArtist in vm.selectedArtistInfo.similarArtistsList">
+                            <li ng-repeat="similarArtist in vm.selectedArtist.similarArtistsList">
                                 <p>{{ similarArtist.match }} - {{ similarArtist.name }}</p>
                             </li>
                         </ul>
@@ -111,6 +123,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 

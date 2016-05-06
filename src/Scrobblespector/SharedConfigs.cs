@@ -18,6 +18,8 @@ namespace Scrobblespector
         private const string SCROBBLER_GET_SIMILAR_ARTISTS_PATH = "?method=artist.getsimilar&mbid={0}&api_key=" + LAST_FM_API_KEY + "&limit=" + 
             SCROBBLER_GET_SIMILAR_ARTISTS_RESULTS_LIMIT + "&format=json";
 
+        private const string SCROBBLER_GET_ARTIST_TOP_TAGS = "?method=artist.gettoptags&mbid={0}&api_key=" + LAST_FM_API_KEY + "&format=json";
+
         public static string GetSearchArtistRequestPath(string artistName)
         {
             if (string.IsNullOrEmpty(artistName))
@@ -50,5 +52,12 @@ namespace Scrobblespector
             return string.Format(SCROBBLER_GET_USER_PATH, userId);
         }
 
+        public static string GetArtistTopTagsRequestPath(string mbid)
+        {
+            if (string.IsNullOrEmpty(mbid))
+                throw new ArgumentNullException("mbid");
+
+            return string.Format(SCROBBLER_GET_ARTIST_TOP_TAGS, mbid);
+        }
     }
 }

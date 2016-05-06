@@ -37,6 +37,17 @@ namespace Scrobblespector.Controllers.api
             return this.Ok(Json(similarArtists));
         }
 
+        [HttpGet("tags/top/{mbid}", Name = "GetTopTags")]
+        public IActionResult GetTopTags(string mbid)
+        {
+            if (string.IsNullOrEmpty(mbid))
+                return this.HttpBadRequest("Artist MBID cannot be null/empty");
+
+            var topTags = _lastFmArtistsService.GetArtistTopTags(mbid);
+
+            return this.Ok(Json(topTags));
+        }
+
         [HttpGet("{mbid}", Name = "GetArtist")]
         public IActionResult GetArtist(string mbid)
         {

@@ -60,6 +60,13 @@
                         vm.selectedArtistDefaultImageUrl = image.url;
                     }
                 });
+
+                ///// get artist top tags //////////////////
+                if (utilizr.isNullOrUndef(vm.selectedArtistInfo.topTags)) {
+                    getArtistTopTags(vm.selectedArtist.mbid, function (topTags) {
+                        vm.selectedArtist.topTags = topTags.slice(0, 10);
+                    });
+                }
             }, function (error) {
                 console.error('error [getArtist] => ' + error)
                 vm.selectedArtistInfo = null;
@@ -69,7 +76,7 @@
         }
 
         vm.setSimilarArtists = function () {
-            if (utilizr.isNotNullAndUndef(vm.selectedArtistInfo.similarArtistsList)) {
+            if (utilizr.isNotNullAndUndef(vm.selectedArtist.similarArtistsList)) {
                 return;
             }
 
@@ -79,16 +86,31 @@
                     return;
                 }
 
-                vm.selectedArtistInfo.similarArtistsList = data.value.foundArtists;
+                vm.selectedArtist.similarArtistsList = data.value.foundArtists;
             }, function (error) {
                 console.error('error [getSimilarArtists] => ' + error)
-                vm.selectedArtistInfo.similarArtistsList = null;
+                vm.selectedArtist.similarArtistsList = null;
             });
         }
 
         vm.diselectAllArtists = function () {
             angular.forEach(vm.foundArtists, function (artist) {
                 artist.isSelected = false;
+            });
+        }
+
+        function getArtistTopTags(mbid, callback) {
+            artistsService.getArtistTopTags(mbid).then(function (data) {
+                if (utilizr.isNullOrUndef(data)) {
+                    console.error('Get Artist Info Error: received null data!');
+                    return;
+                }
+
+                callback(data.value);
+            }, function (error) {
+                console.error('error [getArtistTopTags] => ' + error)
+                vm.selectedArtistInfo.topTags = null;
+                callback([]);
             });
         }
     }

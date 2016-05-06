@@ -115,7 +115,40 @@ namespace Scrobblespector.Services
                 }
 
                 return new SearchArtistsResult { FoundArtists = foundArtists, TotalCount = foundArtists.Count };
-            }            
+            }
+        }
+
+        public List<ArtistTag> GetArtistTopTags(string mbid)
+        {
+            using (var client = new HttpClient(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate }))
+            {
+                client.BaseAddress = new Uri(SharedConfigs.SCROBBLER_BASE_ADDR);
+                HttpResponseMessage response = client.GetAsync(SharedConfigs.GetArtistTopTagsRequestPath(mbid)).Result;
+                response.EnsureSuccessStatusCode();
+
+                //if (response.StatusCode != HttpStatusCode.OK)
+                //    return Json(new { errorMessage = "Wrong data received from LastFM server." });
+
+                // TODO: throw adequate exception
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return new List<ArtistTag>();
+
+                string topTagsJsonStr = response.Content.ReadAsStringAsync().Result;
+                dynamic topTagsJson = JObject.Parse(topTagsJsonStr);
+
+                List<ArtistTag> foundTags = new List<ArtistTag>();
+                foreach (dynamic tag in topTagsJson.toptags.tag)
+                {
+                    foundTags.Add(new ArtistTag
+                    {
+                        Count = tag.count,
+                        Name = tag.name,
+                        Url = tag.url
+                    });
+                }
+
+                return foundTags;
+            }
         }
 
         private Artist GetArtistByDynamicJson(dynamic artistJson)

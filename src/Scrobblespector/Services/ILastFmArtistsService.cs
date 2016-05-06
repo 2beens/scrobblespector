@@ -8,5 +8,6 @@ namespace Scrobblespector.Services
         SearchArtistsResult SearchArtists(string queryString);
         Artist GetArtist(string mbid);
         SearchArtistsResult GetSimilarArtists(string mbid);
+        List<ArtistTag> GetArtistTopTags(string mbid);
     }
 }
