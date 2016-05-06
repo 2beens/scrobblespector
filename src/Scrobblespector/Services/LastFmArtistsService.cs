@@ -10,12 +10,12 @@ namespace Scrobblespector.Services
 {
     public class LastFmArtistsService : ILastFmArtistsService
     {
-        public SearchArtistsResult SearchArtists(string queryString)
+        public SearchArtistsResult SearchArtists(string queryString, int page, int resultsLimit)
         {
             using (var client = new HttpClient(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate }))
             {
                 client.BaseAddress = new Uri(SharedConfigs.SCROBBLER_BASE_ADDR);
-                HttpResponseMessage response = client.GetAsync(SharedConfigs.GetSearchArtistRequestPath(queryString)).Result;
+                HttpResponseMessage response = client.GetAsync(SharedConfigs.GetSearchArtistRequestPath(queryString, page, resultsLimit)).Result;
                 response.EnsureSuccessStatusCode();
 
                 //if (response.StatusCode != HttpStatusCode.OK)
@@ -47,8 +47,16 @@ namespace Scrobblespector.Services
 
                 JObject artistsJsonResults = artistsJson.results as JObject;
                 string totalArtistsCountStr = artistsJsonResults.GetValue("opensearch:totalResults").Value<string>();
+                string currentPageStr = artistsJsonResults.GetValue("opensearch:startIndex").Value<string>();
+                string itemsPerPageStr = artistsJsonResults.GetValue("opensearch:itemsPerPage").Value<string>();
 
-                return new SearchArtistsResult { FoundArtists = foundArtists, TotalCount = Int32.Parse(totalArtistsCountStr) };
+                return new SearchArtistsResult
+                {
+                    FoundArtists = foundArtists,
+                    TotalCount = Int32.Parse(totalArtistsCountStr),
+                    ItemsPerPage = Int32.Parse(itemsPerPageStr),
+                    Page = Int32.Parse(currentPageStr)
+                };
             }
         }
 

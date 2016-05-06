@@ -21,7 +21,7 @@ namespace Scrobblespector.Controllers.api
             if (string.IsNullOrEmpty(artistName))
                 return this.HttpBadRequest("Artist name cannot be null/empty");
             
-            var foundArtists = _lastFmArtistsService.SearchArtists(artistName);
+            var foundArtists = _lastFmArtistsService.SearchArtists(artistName, 1, 10);
 
             return this.Ok(Json(foundArtists));
         }

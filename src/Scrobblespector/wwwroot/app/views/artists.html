@@ -12,8 +12,6 @@
             <a ng-if="!vm.searchInProgress" class="btn btn-primary btn-lg" ng-disabled="vm.artistName.length === 0" ng-click="vm.searchArtist(null)" role="button" style="margin-left: 5px">Search!</a>
             <a ng-if="vm.searchInProgress" ng-disabled="true" class="btn btn-primary btn-lg" role="button" style="margin-left: 5px">Searching...</a>
         </div>
-
-        
     </div>
 
     <div ng-show="vm.foundArtists.length > 0" class="row artists-results">
@@ -37,6 +35,28 @@
                     </a>
                 </div>
             </div>
+
+            <!-- ------------------------------------ ARTISTS PAGINATION ------------------------ -->
+            <!-- -------------------------------------------------------------------------------- -->
+            <nav>
+                <ul class="pagination">
+                    <li>
+                        <a href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">5</a></li>
+                    <li>
+                        <a href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
 
         <div ng-show="vm.selectedArtistInfo !== null" class="col-md-7 selected-artist">
