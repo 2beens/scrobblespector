@@ -4,23 +4,16 @@
         <p>Use this page for artists lookup and inspection!</p>
     </div>
 
-    <div class="row artists-search-input">
-        <div class="col-md-1"><span class="glyphicon glyphicon-cd" aria-hidden="true"></span></div>
-        <div class="col-md-6">
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="input-group input-group-lg">
-                        <span class="input-group-addon" id="sizing-addon1">@</span>
-                        <input type="text" class="form-control" ng-model="vm.artistName" ng-keypress="vm.searchArtist($event)" placeholder="Artist name..." aria-describedby="sizing-addon1">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <a ng-if="!vm.searchInProgress" class="btn btn-primary btn-lg" ng-disabled="vm.artistName.length === 0" ng-click="vm.searchArtist(null)" role="button">Search!</a>
-                    <a ng-if="vm.searchInProgress" ng-disabled="true" class="btn btn-primary btn-lg" role="button">Searching...</a>
-                </div>
-            </div>
+    <div class="artists-search-input">
+        <div class="input-group input-group-lg">
+            <span class="input-group-addon" id="basic-addon3">Artist/Band Name</span>
+            <input type="text" class="form-control" ng-model="vm.artistName" id="basic-url" ng-keypress="vm.searchArtist($event)" aria-describedby="basic-addon3" style="min-width: 150px;">
+
+            <a ng-if="!vm.searchInProgress" class="btn btn-primary btn-lg" ng-disabled="vm.artistName.length === 0" ng-click="vm.searchArtist(null)" role="button" style="margin-left: 5px">Search!</a>
+            <a ng-if="vm.searchInProgress" ng-disabled="true" class="btn btn-primary btn-lg" role="button" style="margin-left: 5px">Searching...</a>
         </div>
-        <div class="col-md-5"></div>
+
+        
     </div>
 
     <div ng-show="vm.foundArtists.length > 0" class="row artists-results">
