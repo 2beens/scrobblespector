@@ -20,8 +20,10 @@ namespace Scrobblespector.Controllers.api
         {
             if (string.IsNullOrEmpty(artistName))
                 return this.HttpBadRequest("Artist name cannot be null/empty");
-            
-            var foundArtists = _lastFmArtistsService.SearchArtists(artistName, 1, 10);
+
+            int page = 1;
+            int resultsLimit = 10;
+            var foundArtists = _lastFmArtistsService.SearchArtists(artistName, page, resultsLimit);
 
             return this.Ok(Json(foundArtists));
         }
@@ -46,6 +48,19 @@ namespace Scrobblespector.Controllers.api
             var topTags = _lastFmArtistsService.GetArtistTopTags(mbid);
 
             return this.Ok(Json(topTags));
+        }
+
+        [HttpGet("tracks/top/{mbid}", Name = "GetTopTracks")]
+        public IActionResult GetTopTracks(string mbid)
+        {
+            if (string.IsNullOrEmpty(mbid))
+                return this.HttpBadRequest("Artist MBID cannot be null/empty");
+
+            int page = 1;
+            int resultsLimit = 15;
+            var topTracks = _lastFmArtistsService.GetArtistTopTracks(mbid, page, resultsLimit);
+
+            return this.Ok(Json(topTracks));
         }
 
         [HttpGet("{mbid}", Name = "GetArtist")]

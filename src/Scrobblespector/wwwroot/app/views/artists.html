@@ -99,8 +99,8 @@
             <ul class="nav nav-tabs">
                 <li role="presentation" ng-click="vm.activeTab = 1" ng-class="{ 'active': vm.activeTab === 1 }"><a href="">Bio</a></li>
                 <li role="presentation" ng-click="vm.activeTab = 2" ng-class="{ 'active': vm.activeTab === 2 }"><a href="">Images</a></li>
-                <li role="presentation" ng-click="vm.activeTab = 3; vm.setSimilarArtists()" ng-class="{ 'active': vm.activeTab === 3 }"><a href="">Similar Artists</a></li>
-                <li role="presentation" ng-click="vm.activeTab = 4" ng-class="{ 'active': vm.activeTab === 4 }"><a href="">Top Tracks</a></li>
+                <li role="presentation" ng-click="vm.activeTab = 3; vm.setSimilarArtists();" ng-class="{ 'active': vm.activeTab === 3 }"><a href="">Similar Artists</a></li>
+                <li role="presentation" ng-click="vm.activeTab = 4; vm.setTopTracks();" ng-class="{ 'active': vm.activeTab === 4 }"><a href="">Top Tracks</a></li>
             </ul>
             <div class="row artist-info-details">
                 <!-- ------------------------------------ BIO --------------------------------------- -->
@@ -132,7 +132,10 @@
                 </div>
                 <!-- ------------------------------------ TOP TRACKS -------------------------------- -->
                 <div ng-show="vm.activeTab === 4" class="artist-info-details-top-tracks">
-                    <div class="row">
+                    <div class="row" ng-show="vm.selectedArtist.topTracks !== null">
+                        <li ng-repeat="track in vm.selectedArtist.topTracks">
+                            <p>{{ track.rank }} - {{ track.name }}</p>
+                        </li>
                     </div>
                 </div>
             </div>

@@ -10,17 +10,20 @@
         var searchArtistsApiPath = utilizr.getArtistsApiPath() + '/search/:artistName';
         var similarArtistsApiPath = utilizr.getArtistsApiPath() + '/similar/:mbid';
         var artistsTopTagsApiPath = utilizr.getArtistsApiPath() + '/tags/top/:mbid';
+        var artistsTopTracksApiPath = utilizr.getArtistsApiPath() + '/tracks/top/:mbid';
 
         var Artists = $resource(artistsApiPath, { mbid: '@mbid' });
         var ArtistsSearch = $resource(searchArtistsApiPath, { artistName: '@artistName' });
         var ArtistsSimilar = $resource(similarArtistsApiPath, { mbid: '@mbid' });
         var ArtistsTopTags = $resource(artistsTopTagsApiPath, { mbid: '@mbid' });
+        var ArtistsTopTracks = $resource(artistsTopTracksApiPath, { mbid: '@mbid' });
 
         var service = {
             searchArtist: searchArtist,
             getArtist: getArtist,
             getSimilarArtists: getSimilarArtists,
-            getArtistTopTags: getArtistTopTags
+            getArtistTopTags: getArtistTopTags,
+            getArtistTopTracks: getArtistTopTracks
         };
 
         return service;
@@ -41,6 +44,10 @@
 
         function getArtistTopTags(mbid) {
             return ArtistsTopTags.get({ mbid: mbid }).$promise;
+        }
+
+        function getArtistTopTracks(mbid) {
+            return ArtistsTopTracks.get({ mbid: mbid }).$promise;
         }
     }
 })();

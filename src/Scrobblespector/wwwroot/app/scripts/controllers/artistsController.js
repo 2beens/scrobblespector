@@ -93,6 +93,24 @@
             });
         };
 
+        vm.setTopTracks = function () {
+            if (utilizr.isNotNullAndUndef(vm.selectedArtist.topTracks)) {
+                return;
+            }
+
+            artistsService.getArtistTopTracks(vm.selectedArtist.mbid).then(function (data) {
+                if (utilizr.isNullOrUndef(data)) {
+                    console.error('Get artist top tracks: received null data!');
+                    return;
+                }
+
+                vm.selectedArtist.topTracks = data.value;
+            }, function (error) {
+                console.error('error [setTopTracks] => ' + error)
+                vm.selectedArtist.topTracks = null;
+            });
+        };
+
         vm.diselectAllArtists = function () {
             angular.forEach(vm.foundArtists, function (artist) {
                 artist.isSelected = false;

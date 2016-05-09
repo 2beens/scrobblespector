@@ -159,6 +159,49 @@ namespace Scrobblespector.Services
             }
         }
 
+        public List<ArtistTrack> GetArtistTopTracks(string mbid, int page, int resultsLimit)
+        {
+            using (var client = new HttpClient(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate }))
+            {
+                client.BaseAddress = new Uri(SharedConfigs.SCROBBLER_BASE_ADDR);
+                HttpResponseMessage response = client.GetAsync(SharedConfigs.GetArtistTopTracksRequestPath(mbid, page, resultsLimit)).Result;
+                response.EnsureSuccessStatusCode();
+
+                //if (response.StatusCode != HttpStatusCode.OK)
+                //    return Json(new { errorMessage = "Wrong data received from LastFM server." });
+
+                // TODO: throw adequate exception
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return new List<ArtistTrack>();
+
+                string topTracksJsonStr = response.Content.ReadAsStringAsync().Result;
+                dynamic topTracksJson = JObject.Parse(topTracksJsonStr);
+
+                List<ArtistTrack> foundTrakcs = new List<ArtistTrack>();
+                foreach (dynamic track in topTracksJson.toptracks.track)
+                {
+                    List<LastFmImage> images = new List<LastFmImage>();
+                    foreach (JObject image in track.image)
+                    {
+                        string imageSize = image.GetValue("size").Value<string>();
+                        string imageUrl = image.GetValue("#text").Value<string>();
+                        images.Add(new LastFmImage(imageSize, imageUrl));
+                    }
+
+                    foundTrakcs.Add(new ArtistTrack
+                    {
+                        Name = track.name,
+                        PlayCount = track.playcount,
+                        ListenersCount = track.listeners,
+                        Images = images,
+                        Rank = ((track as JObject).GetValue("@attr").First as JProperty).Value.ToString()
+                    });
+                }
+
+                return foundTrakcs;
+            }
+        }
+
         private Artist GetArtistByDynamicJson(dynamic artistJson)
         {
             List<LastFmImage> images = new List<LastFmImage>();
@@ -241,5 +284,6 @@ namespace Scrobblespector.Services
                 SimilarArtists = similarArtists
             };
         }
+
     }
 }

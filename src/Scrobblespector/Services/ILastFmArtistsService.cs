@@ -9,5 +9,6 @@ namespace Scrobblespector.Services
         Artist GetArtist(string mbid);
         SearchArtistsResult GetSimilarArtists(string mbid);
         List<ArtistTag> GetArtistTopTags(string mbid);
+        List<ArtistTrack> GetArtistTopTracks(string mbid, int page, int resultsLimit);
     }
 }
