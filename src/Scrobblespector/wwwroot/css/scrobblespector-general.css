@@ -86,3 +86,25 @@
 .artist-tag p {
     margin: 0px;
 }
+
+.artist-info-details-top-tracks {
+    margin: 15px;
+}
+
+.artist-top-track {
+    margin-bottom: 5px;
+    border-radius: 5px;
+    background-color: white;
+    color: black;
+    padding: 2px;
+}
+
+.artist-top-track p {
+    margin: 0px;
+}
+
+.artist-top-track-playcount {
+    background-color: black;
+    color: white;
+    border-radius: 15px;
+}

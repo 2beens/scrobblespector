@@ -121,21 +121,21 @@
                 </div>
 
                 <!-- ------------------------------------ SIMILAR ----------------------------------- -->
-                <div ng-show="vm.activeTab === 3" class="artist-info-details-similar-artist">
-                    <div class="artist-similar-artists">
-                        <ul>
-                            <li ng-repeat="similarArtist in vm.selectedArtist.similarArtistsList">
-                                <p>{{ similarArtist.match }} - {{ similarArtist.name }}</p>
-                            </li>
-                        </ul>
-                    </div>
+                <div ng-show="vm.activeTab === 3" class="artist-similar-artists">
+                    <ul>
+                        <li ng-repeat="similarArtist in vm.selectedArtist.similarArtistsList">
+                            <p>{{ similarArtist.match }} - {{ similarArtist.name }}</p>
+                        </li>
+                    </ul>
                 </div>
+
                 <!-- ------------------------------------ TOP TRACKS -------------------------------- -->
                 <div ng-show="vm.activeTab === 4" class="artist-info-details-top-tracks">
-                    <div class="row" ng-show="vm.selectedArtist.topTracks !== null">
-                        <li ng-repeat="track in vm.selectedArtist.topTracks">
-                            <p>{{ track.rank }} - {{ track.name }}</p>
-                        </li>
+                    <div ng-show="vm.selectedArtist.topTracks !== null">
+                        <div class="artist-top-track" ng-repeat="track in vm.selectedArtist.topTracks">
+                            <p><span class="artist-top-track-playcount">{{ track.playCount }}</span> {{ track.name }}</p>
+                            <p>{{ track.listenersCount }} listeners</p>
+                        </div ng-repeat="track>
                     </div>
                 </div>
             </div>
